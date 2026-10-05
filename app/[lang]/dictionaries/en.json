@@ -1,0 +1,116 @@
+{
+  "login": {
+    "title": "Sign in",
+    "description": "Construction-site concrete quality management",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "errors": {
+      "usernameRequired": "Please enter your username.",
+      "passwordRequired": "Please enter your password.",
+      "invalidCredentials": "Invalid username or password."
+    }
+  },
+  "dashboard": {
+    "title": "Minh Global — Concrete Management",
+    "subtitle": "Site overview",
+    "logout": "Log out",
+    "stats": {
+      "totalElements": "Total elements",
+      "curing": "Currently curing",
+      "dueForTesting": "Due for testing",
+      "overdue": "Overdue for testing",
+      "passed": "Tests passed",
+      "failed": "Tests failed"
+    },
+    "table": {
+      "title": "Element list",
+      "element": "Element",
+      "pourDate": "Pour date",
+      "supplier": "Supplier / Category",
+      "volume": "Volume",
+      "sampleSets": "Sets",
+      "curing": "Curing + Photo",
+      "photo": "Photos",
+      "testPhoto": "Result photos",
+      "test": "28-day test + Result",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "empty": "No elements yet.",
+      "curingDays": "{days} days",
+      "viewPhoto": "View photo",
+      "uploadPhoto": "Upload photo",
+      "notTested": "Not tested",
+      "mpa": "MPa",
+      "m3": "m³",
+      "statuses": {
+        "curing": "Curing",
+        "due": "Due for testing",
+        "overdue": "Overdue",
+        "passed": "Passed",
+        "failed": "Failed"
+      },
+      "menu": {
+        "detail": "View details",
+        "record": "Record test result",
+        "upload": "Upload photo"
+      }
+    },
+    "add": "Add element",
+    "export": "Export Excel",
+    "form": {
+      "title": "New concrete element",
+      "editTitle": "Edit element",
+      "description": "Record a concrete pour on site",
+      "element": "Concrete element",
+      "pourDate": "Pour date",
+      "supplier": "Supplier",
+      "category": "Category",
+      "volume": "Volume (m³)",
+      "curingDays": "Curing days (per method)",
+      "curingRemindersPerDay": "Curing reminders (times/day)",
+      "selectPlaceholder": "Select...",
+      "addOption": "Add new",
+      "newOptionPlaceholder": "Enter new name...",
+      "submit": "Save",
+      "submitting": "Saving...",
+      "cancel": "Cancel",
+      "errors": {
+        "required": "This field is required.",
+        "invalidNumber": "Invalid value."
+      }
+    },
+    "nav": {
+      "overview": "Overview",
+      "categories": "Categories",
+      "suppliers": "Suppliers",
+      "logout": "Log out"
+    },
+    "optionsPage": {
+      "name": "Name",
+      "actions": "Actions",
+      "add": "Add",
+      "edit": "Edit",
+      "editTitle": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "empty": "No data yet.",
+      "categories": {
+        "title": "Categories",
+        "addPlaceholder": "Add new category..."
+      },
+      "suppliers": {
+        "title": "Suppliers",
+        "addPlaceholder": "Add new supplier..."
+      }
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  }
+}

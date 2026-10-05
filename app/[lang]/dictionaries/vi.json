@@ -1,0 +1,116 @@
+{
+  "login": {
+    "title": "Đăng nhập",
+    "description": "Hệ thống quản lý chất lượng bê tông công trường",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "submitting": "Đang đăng nhập...",
+    "errors": {
+      "usernameRequired": "Vui lòng nhập tên đăng nhập.",
+      "passwordRequired": "Vui lòng nhập mật khẩu.",
+      "invalidCredentials": "Tên đăng nhập hoặc mật khẩu không đúng."
+    }
+  },
+  "dashboard": {
+    "title": "Minh Global — Quản lý bê tông",
+    "subtitle": "Tổng quan công trường",
+    "logout": "Đăng xuất",
+    "stats": {
+      "totalElements": "Tổng cấu kiện",
+      "curing": "Đang bảo dưỡng",
+      "dueForTesting": "Đến hạn nén mẫu",
+      "overdue": "Quá hạn nén mẫu",
+      "passed": "Nén mẫu đạt",
+      "failed": "Nén mẫu không đạt"
+    },
+    "table": {
+      "title": "Danh sách cấu kiện",
+      "element": "Cấu kiện",
+      "pourDate": "Ngày đổ",
+      "supplier": "NCC / Hạng mục",
+      "volume": "Khối lượng",
+      "sampleSets": "Số tổ",
+      "curing": "Bảo dưỡng + Ảnh",
+      "photo": "Ảnh",
+      "testPhoto": "Ảnh kết quả",
+      "test": "Nén mẫu 28 ngày + Kết quả",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "empty": "Chưa có cấu kiện nào.",
+      "curingDays": "{days} ngày",
+      "viewPhoto": "Xem ảnh",
+      "uploadPhoto": "Tải ảnh lên",
+      "notTested": "Chưa nén",
+      "mpa": "MPa",
+      "m3": "m³",
+      "statuses": {
+        "curing": "Đang bảo dưỡng",
+        "due": "Đến hạn nén",
+        "overdue": "Quá hạn nén",
+        "passed": "Đạt",
+        "failed": "Không đạt"
+      },
+      "menu": {
+        "detail": "Xem chi tiết",
+        "record": "Nhập kết quả nén",
+        "upload": "Tải ảnh lên"
+      }
+    },
+    "add": "Thêm cấu kiện",
+    "export": "Xuất Excel",
+    "form": {
+      "title": "Thêm cấu kiện bê tông",
+      "editTitle": "Chỉnh sửa cấu kiện",
+      "description": "Nhập liệu phiếu đổ bê tông tại công trình",
+      "element": "Cấu kiện bê tông",
+      "pourDate": "Ngày đổ",
+      "supplier": "Nhà cung cấp",
+      "category": "Hạng mục",
+      "volume": "Khối lượng (m³)",
+      "curingDays": "Số ngày bảo dưỡng theo biện pháp",
+      "curingRemindersPerDay": "Nhắc hẹn bảo dưỡng (lần/ngày)",
+      "selectPlaceholder": "Chọn...",
+      "addOption": "Thêm mới",
+      "newOptionPlaceholder": "Nhập tên mới...",
+      "submit": "Lưu",
+      "submitting": "Đang lưu...",
+      "cancel": "Hủy",
+      "errors": {
+        "required": "Trường bắt buộc.",
+        "invalidNumber": "Giá trị không hợp lệ."
+      }
+    },
+    "nav": {
+      "overview": "Tổng quan",
+      "categories": "Danh mục",
+      "suppliers": "Nhà cung cấp",
+      "logout": "Đăng xuất"
+    },
+    "optionsPage": {
+      "name": "Tên",
+      "actions": "Thao tác",
+      "add": "Thêm",
+      "edit": "Sửa",
+      "editTitle": "Chỉnh sửa",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "remove": "Xóa",
+      "empty": "Chưa có dữ liệu.",
+      "categories": {
+        "title": "Danh mục",
+        "addPlaceholder": "Thêm danh mục mới..."
+      },
+      "suppliers": {
+        "title": "Nhà cung cấp",
+        "addPlaceholder": "Thêm nhà cung cấp mới..."
+      }
+    },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Sau"
+    }
+  }
+}
