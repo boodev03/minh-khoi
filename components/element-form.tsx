@@ -1,11 +1,10 @@
 "use client"
 
 import { useActionState } from "react"
-import { createElement } from "@/app/actions/elements"
+import { addOptionAction } from "@/app/actions/options"
 import type { Dictionary } from "@/app/[lang]/dictionaries"
 import type { FormState } from "@/lib/definitions"
 import type { ConcreteElement } from "@/lib/concrete"
-import { useOptionsStore } from "@/lib/options-store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -19,28 +18,31 @@ export function ElementForm({
   dict,
   initial,
   action,
+  suppliers,
+  categories,
+  lang,
 }: {
   dict: FormDict
   initial?: ConcreteElement
-  action?: (
+  action: (
     state: FormState,
     formData: FormData
   ) => Promise<FormState>
+  suppliers: string[]
+  categories: string[]
+  lang: string
 }) {
-  const [state, formAction, pending] = useActionState(
-    action ?? createElement,
-    undefined
-  )
-  const suppliers = useOptionsStore((s) => s.suppliers)
-  const categories = useOptionsStore((s) => s.categories)
-  const addSupplier = useOptionsStore((s) => s.addSupplier)
-  const addCategory = useOptionsStore((s) => s.addCategory)
+  const [state, formAction, pending] = useActionState(action, undefined)
   const supplierOptions = initial?.supplier
     ? [...new Set([...suppliers, initial.supplier])]
     : suppliers
   const categoryOptions = initial?.category
     ? [...new Set([...categories, initial.category])]
     : categories
+  const addSupplier = (v: string) =>
+    void addOptionAction("suppliers", v, lang)
+  const addCategory = (v: string) =>
+    void addOptionAction("categories", v, lang)
 
   const errorText = (key?: string) =>
     key ? (dict.errors[key as keyof FormErrors] ?? key) : undefined

@@ -1,5 +1,12 @@
 import "server-only"
 
+import {
+  appendRow,
+  deleteRow,
+  readRange,
+  updateRow,
+} from "@/lib/sheets"
+
 export type ElementStatus = "curing" | "due" | "overdue" | "passed" | "failed"
 export type NotifyChannel = "web" | "email" | "both"
 
@@ -34,18 +41,109 @@ export type ConcreteElement = {
   /** Kết quả nén (MPa) */
   testResult: number | null
   status: ElementStatus
+  /** Tòa nhà / block the element belongs to (see lib/projects.ts) */
+  buildingId: string
 }
 
-// --- In-memory store ------------------------------------------------------
-// TODO: replace with real DB tables once persistence is added.
+const ELEMENT_RANGE = "A2:Q"
 
-const elements: ConcreteElement[] = []
+const num = (v: string | undefined) => (v ? Number(v) : 0)
+const arr = (v: string | undefined): string[] => {
+  try {
+    return v ? (JSON.parse(v) as string[]) : []
+  } catch {
+    return []
+  }
+}
+const str = (v: string | undefined) => (v ? v : null)
 
-export function getElements(): ConcreteElement[] {
-  return elements
+function rowToElement(row: string[]): ConcreteElement {
+  const [
+    id,
+    name,
+    pourDate,
+    supplier,
+    category,
+    volume,
+    sampleSets,
+    curingDays,
+    curingRemindersPerDay,
+    notifyChannel,
+    testDueDays,
+    photoUrls,
+    testPhotoUrls,
+    testDate,
+    testResult,
+    status,
+    buildingId,
+  ] = row
+  return {
+    id,
+    name,
+    pourDate,
+    supplier,
+    category,
+    volume: num(volume),
+    sampleSets: num(sampleSets),
+    curingDays: num(curingDays),
+    curingRemindersPerDay: num(curingRemindersPerDay),
+    notifyChannel: (notifyChannel as NotifyChannel) || "web",
+    testDueDays: num(testDueDays) || 28,
+    photoUrls: arr(photoUrls),
+    testPhotoUrls: arr(testPhotoUrls),
+    testDate: str(testDate),
+    testResult: testResult ? Number(testResult) : null,
+    status: (status as ElementStatus) || "curing",
+    buildingId: buildingId ?? "",
+  }
 }
 
-export type NewElement = Omit<
+function elementToRow(el: ConcreteElement): (string | number)[] {
+  return [
+    el.id,
+    el.name,
+    el.pourDate,
+    el.supplier,
+    el.category,
+    el.volume,
+    el.sampleSets,
+    el.curingDays,
+    el.curingRemindersPerDay,
+    el.notifyChannel,
+    el.testDueDays,
+    JSON.stringify(el.photoUrls),
+    JSON.stringify(el.testPhotoUrls),
+    el.testDate ?? "",
+    el.testResult ?? "",
+    el.status,
+    el.buildingId,
+  ]
+}
+
+export async function getElements(
+  buildingIds?: string[]
+): Promise<ConcreteElement[]> {
+  const rows = await readRange("elements", ELEMENT_RANGE)
+  const all = rows.filter((r) => r[0]).map(rowToElement)
+  if (!buildingIds) return all
+  const wanted = new Set(buildingIds)
+  return all.filter((el) => wanted.has(el.buildingId))
+}
+
+async function getRowById(
+  id: string
+): Promise<{ rowNumber: number; el: ConcreteElement } | null> {
+  const rows = await readRange("elements", ELEMENT_RANGE)
+  for (let i = 0; i < rows.length; i++) {
+    if (rows[i][0] === id) {
+      return { rowNumber: i + 2, el: rowToElement(rows[i]) }
+    }
+  }
+  return null
+}
+
+/** Fields a user edits on an element; the building is fixed at creation. */
+export type ElementInput = Omit<
   ConcreteElement,
   | "id"
   | "sampleSets"
@@ -56,7 +154,10 @@ export type NewElement = Omit<
   | "status"
   | "notifyChannel"
   | "testDueDays"
+  | "buildingId"
 >
+
+export type NewElement = ElementInput & { buildingId: string }
 
 // 1 tổ mẫu per 20 m³ — anything ≤ 20 m³ is still 1 set.
 function computeSampleSets(volume: number) {
@@ -69,7 +170,9 @@ function computeStatus(pourDate: string, testDueDays: number): ElementStatus {
   return new Date() > due ? "overdue" : "curing"
 }
 
-export function addElement(data: NewElement): ConcreteElement {
+export async function addElement(
+  data: NewElement
+): Promise<ConcreteElement> {
   const element: ConcreteElement = {
     ...data,
     id: crypto.randomUUID(),
@@ -82,45 +185,47 @@ export function addElement(data: NewElement): ConcreteElement {
     testResult: null,
     status: computeStatus(data.pourDate, 28),
   }
-  elements.push(element)
+  await appendRow("elements", elementToRow(element))
   return element
 }
 
-export function updateElement(id: string, data: NewElement) {
-  const i = elements.findIndex((e) => e.id === id)
-  if (i === -1) return
-  const prev = elements[i]
+export async function updateElement(id: string, data: ElementInput) {
+  const found = await getRowById(id)
+  if (!found) return
+  const prev = found.el
   const status =
     prev.status === "passed" || prev.status === "failed"
       ? prev.status
       : computeStatus(data.pourDate, prev.testDueDays)
-  elements[i] = {
+  const next: ConcreteElement = {
     ...prev,
     ...data,
     sampleSets: computeSampleSets(data.volume),
     status,
   }
+  await updateRow("elements", found.rowNumber, elementToRow(next))
 }
 
-export function removeElement(id: string) {
-  const i = elements.findIndex((e) => e.id === id)
-  if (i !== -1) elements.splice(i, 1)
+export async function removeElement(id: string) {
+  const found = await getRowById(id)
+  if (found) await deleteRow("elements", found.rowNumber)
 }
 
-export function setElementStatus(id: string, status: ElementStatus) {
-  const el = elements.find((e) => e.id === id)
-  if (el) el.status = status
+export async function setElementStatus(id: string, status: ElementStatus) {
+  const found = await getRowById(id)
+  if (!found) return
+  await updateRow("elements", found.rowNumber, elementToRow({ ...found.el, status }))
 }
 
-export function addElementPhoto(
+export async function addElementPhoto(
   id: string,
   photoUrl: string,
   kind: "pour" | "test"
 ) {
-  const el = elements.find((e) => e.id === id)
-  if (!el) return
+  const found = await getRowById(id)
+  if (!found) return
+  const el = found.el
   if (kind === "test") el.testPhotoUrls.push(photoUrl)
   else el.photoUrls.push(photoUrl)
+  await updateRow("elements", found.rowNumber, elementToRow(el))
 }
-
-

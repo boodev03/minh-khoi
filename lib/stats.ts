@@ -1,6 +1,4 @@
-import "server-only"
-
-import { getElements } from "@/lib/concrete"
+import type { ConcreteElement } from "@/lib/concrete"
 
 export type DashboardStats = {
   totalElements: number
@@ -11,8 +9,7 @@ export type DashboardStats = {
   failed: number
 }
 
-export function getDashboardStats(): DashboardStats {
-  const elements = getElements()
+export function computeStats(elements: ConcreteElement[]): DashboardStats {
   const count = (status: string) =>
     elements.filter((e) => e.status === status).length
 

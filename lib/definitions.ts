@@ -29,3 +29,10 @@ export const ElementFormSchema = z.object({
     .min(0, { error: "invalidNumber" })
     .max(10, { error: "invalidNumber" }),
 })
+
+/** Where an element lives; also the page to return to after saving. */
+export type ElementScope = {
+  lang: string
+  projectId: string
+  buildingId: string
+}

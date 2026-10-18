@@ -2,9 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
-  LayoutDashboard,
+  Building2,
+  Check,
+  ChevronsUpDown,
   LogOut,
   Tags,
   Truck,
@@ -15,6 +17,14 @@ import type { Locale } from "@/lib/i18n"
 import { logout } from "@/app/actions/auth"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import type { Project } from "@/lib/projects"
 import { cn } from "@/lib/utils"
 
 type NavDict = Dictionary["dashboard"]["nav"]
@@ -23,16 +33,21 @@ export function AppSidebar({
   lang,
   dict,
   username,
+  projects,
 }: {
   lang: Locale
   dict: NavDict
   username: string
+  projects: Project[]
 }) {
   const pathname = usePathname()
+  const router = useRouter()
   const rest = pathname.replace(/^\/(vi|en)/, "") || "/"
+  const currentId = rest.match(/^\/projects\/([^/]+)/)?.[1]
+  const current = projects.find((p) => p.id === currentId)
 
   const items: { href: string; label: string; icon: LucideIcon }[] = [
-    { href: `/${lang}`, label: dict.overview, icon: LayoutDashboard },
+    { href: `/${lang}`, label: dict.projects, icon: Building2 },
     { href: `/${lang}/categories`, label: dict.categories, icon: Tags },
     { href: `/${lang}/suppliers`, label: dict.suppliers, icon: Truck },
   ]
@@ -50,10 +65,46 @@ export function AppSidebar({
         <span className="text-sm font-semibold">Minh Global</span>
       </div>
 
+      <div className="border-b p-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <button
+                type="button"
+                className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg border bg-background px-3 py-2 text-left text-sm font-medium hover:bg-muted"
+              />
+            }
+          >
+            <Building2 className="size-4 shrink-0 text-primary" />
+            <span className="min-w-0 flex-1 truncate">
+              {current?.name ?? dict.selectProject}
+            </span>
+            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-52">
+            {projects.map((p) => (
+              <DropdownMenuItem
+                key={p.id}
+                onClick={() => router.push(`/${lang}/projects/${p.id}`)}
+              >
+                <span className="flex-1 truncate">{p.name}</span>
+                {p.id === currentId && <Check />}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push(`/${lang}`)}>
+              {dict.allProjects}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       <nav className="flex flex-1 flex-col gap-1 p-3">
         {items.map((item) => {
           const active =
-            item.href === `/${lang}` ? rest === "/" : rest.startsWith(item.href.slice(lang.length + 1))
+            item.href === `/${lang}`
+              ? rest === "/" || rest.startsWith("/projects")
+              : rest.startsWith(item.href.slice(lang.length + 1))
           return (
             <Link
               key={item.href}

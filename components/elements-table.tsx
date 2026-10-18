@@ -17,6 +17,7 @@ import {
 } from "@/app/actions/elements"
 import type { ConcreteElement, ElementStatus } from "@/lib/concrete"
 import type { Dictionary } from "@/app/[lang]/dictionaries"
+import type { ElementScope } from "@/lib/definitions"
 import type { Locale } from "@/lib/i18n"
 import {
   DataTable,
@@ -35,7 +36,10 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog"
-import { ElementDialog } from "@/components/new-element-dialog"
+import {
+  ElementDialog,
+  type ElementOptions,
+} from "@/components/new-element-dialog"
 import { cn } from "@/lib/utils"
 
 type TableDict = Dictionary["dashboard"]["table"]
@@ -101,14 +105,18 @@ export function ElementsTable({
   rows,
   dict,
   dashboardDict,
+  options,
   labels,
   locale,
+  scope,
 }: {
   rows: ConcreteElement[]
   dict: TableDict
   dashboardDict: Dictionary["dashboard"]
+  options: ElementOptions
   labels: DataTablePaginationLabels
   locale: Locale
+  scope: ElementScope
 }) {
   const [, startStatusTransition] = useTransition()
   const [deletePending, startDeleteTransition] = useTransition()
@@ -301,6 +309,8 @@ export function ElementsTable({
           <ElementDialog
             dict={dashboardDict}
             element={el}
+            options={options}
+            scope={scope}
             trigger={
               <Button
                 variant="ghost"

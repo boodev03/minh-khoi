@@ -33,10 +33,16 @@ export function AddableSelect({
 }) {
   const [adding, setAdding] = useState(false)
   const [draft, setDraft] = useState("")
+  // Newly added options show instantly; `onAdd` persists them to the sheet.
+  const [extras, setExtras] = useState<string[]>([])
+  const allOptions = [...new Set([...options, ...extras])]
 
   const confirm = () => {
     const value = draft.trim()
-    if (value) onAdd(value)
+    if (value) {
+      setExtras((e) => (e.includes(value) ? e : [...e, value]))
+      onAdd(value)
+    }
     setDraft("")
     setAdding(false)
   }
@@ -49,7 +55,7 @@ export function AddableSelect({
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
-            {options.map((option) => (
+            {allOptions.map((option) => (
               <SelectItem key={option} value={option}>
                 {option}
               </SelectItem>

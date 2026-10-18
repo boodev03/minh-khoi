@@ -84,10 +84,12 @@
       }
     },
     "nav": {
-      "overview": "Tổng quan",
+      "projects": "Dự án",
       "categories": "Danh mục",
       "suppliers": "Nhà cung cấp",
-      "logout": "Đăng xuất"
+      "logout": "Đăng xuất",
+      "selectProject": "Chọn dự án",
+      "allProjects": "Tất cả dự án"
     },
     "optionsPage": {
       "name": "Tên",
@@ -111,6 +113,37 @@
     "pagination": {
       "previous": "Trước",
       "next": "Sau"
+    }
+  },
+  "projects": {
+    "title": "Dự án",
+    "subtitle": "Chọn một dự án để quản lý các tòa nhà và cấu kiện bê tông.",
+    "newProject": "Thêm dự án",
+    "editProject": "Sửa dự án",
+    "projectName": "Tên dự án",
+    "noProjects": "Chưa có dự án.",
+    "projectMeta": "{buildings} tòa nhà · {elements} cấu kiện",
+    "buildingsTitle": "Tòa nhà",
+    "newBuilding": "Thêm tòa nhà",
+    "editBuilding": "Sửa tòa nhà",
+    "buildingName": "Tên tòa nhà",
+    "noBuildings": "Chưa có tòa nhà.",
+    "buildingMeta": "{elements} cấu kiện",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "errors": {
+      "required": "Vui lòng nhập tên.",
+      "projectNotEmpty": "Hãy xóa các tòa nhà của dự án này trước.",
+      "buildingNotEmpty": "Hãy xóa các cấu kiện của tòa nhà này trước."
+    },
+    "onboarding": {
+      "title": "Tạo dự án đầu tiên",
+      "description": "Dự án giúp gom các tòa nhà và cấu kiện bê tông. Hãy tạo một dự án để bắt đầu.",
+      "nameLabel": "Tên dự án",
+      "submit": "Tạo dự án",
+      "submitting": "Đang tạo..."
     }
   }
 }

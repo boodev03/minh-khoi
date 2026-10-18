@@ -5,6 +5,8 @@ import { getDictionary } from "../dictionaries"
 import { hasLocale } from "@/lib/i18n"
 import { getElements } from "@/lib/concrete"
 
+export const dynamic = "force-dynamic"
+
 // exceljs only embeds jpeg/png/gif — webp uploads are skipped.
 const IMAGE_TYPES: Record<string, "jpeg" | "png" | "gif"> = {
   ".jpg": "jpeg",
@@ -32,7 +34,7 @@ const COL_PX = 7 // approx px per excel column width unit
 const MAX_PHOTOS = 3
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ lang: string }> }
 ) {
   const { lang } = await params
@@ -42,7 +44,8 @@ export async function GET(
 
   const dict = await getDictionary(lang)
   const t = dict.dashboard.table
-  const elements = getElements()
+  const buildingId = new URL(request.url).searchParams.get("buildingId")
+  const elements = await getElements(buildingId ? [buildingId] : undefined)
 
   const dateFmt = new Intl.DateTimeFormat(
     lang === "vi" ? "vi-VN" : "en-GB",

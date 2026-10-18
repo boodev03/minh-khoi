@@ -84,10 +84,12 @@
       }
     },
     "nav": {
-      "overview": "Overview",
+      "projects": "Projects",
       "categories": "Categories",
       "suppliers": "Suppliers",
-      "logout": "Log out"
+      "logout": "Log out",
+      "selectProject": "Select project",
+      "allProjects": "All projects"
     },
     "optionsPage": {
       "name": "Name",
@@ -111,6 +113,37 @@
     "pagination": {
       "previous": "Previous",
       "next": "Next"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Pick a project to manage its buildings and concrete elements.",
+    "newProject": "New project",
+    "editProject": "Edit project",
+    "projectName": "Project name",
+    "noProjects": "No projects yet.",
+    "projectMeta": "{buildings} buildings · {elements} elements",
+    "buildingsTitle": "Buildings",
+    "newBuilding": "New building",
+    "editBuilding": "Edit building",
+    "buildingName": "Building name",
+    "noBuildings": "No buildings yet.",
+    "buildingMeta": "{elements} elements",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "errors": {
+      "required": "Name is required.",
+      "projectNotEmpty": "Delete this project's buildings first.",
+      "buildingNotEmpty": "Delete this building's elements first."
+    },
+    "onboarding": {
+      "title": "Create your first project",
+      "description": "Projects group your buildings and concrete elements. Create one to get started.",
+      "nameLabel": "Project name",
+      "submit": "Create project",
+      "submitting": "Creating..."
     }
   }
 }

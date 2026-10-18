@@ -4,7 +4,11 @@ import { mkdir, writeFile } from "fs/promises"
 import path from "path"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { ElementFormSchema, type FormState } from "@/lib/definitions"
+import {
+  ElementFormSchema,
+  type ElementScope,
+  type FormState,
+} from "@/lib/definitions"
 import {
   addElement,
   addElementPhoto,
@@ -12,7 +16,6 @@ import {
   setElementStatus,
   updateElement,
   type ElementStatus,
-  type NewElement,
 } from "@/lib/concrete"
 
 function parseElementForm(formData: FormData) {
@@ -27,7 +30,12 @@ function parseElementForm(formData: FormData) {
   })
 }
 
+function buildingPath({ lang, projectId, buildingId }: ElementScope) {
+  return `/${lang}/projects/${projectId}/buildings/${buildingId}`
+}
+
 export async function createElement(
+  scope: ElementScope,
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -37,12 +45,13 @@ export async function createElement(
     return { errors: validated.error.flatten().fieldErrors }
   }
 
-  addElement(validated.data)
-  redirect("/")
+  await addElement({ ...validated.data, buildingId: scope.buildingId })
+  redirect(buildingPath(scope))
 }
 
 export async function updateElementAction(
   elementId: string,
+  scope: ElementScope,
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -52,12 +61,12 @@ export async function updateElementAction(
     return { errors: validated.error.flatten().fieldErrors }
   }
 
-  updateElement(elementId, validated.data as NewElement)
-  redirect("/")
+  await updateElement(elementId, validated.data)
+  redirect(buildingPath(scope))
 }
 
 export async function deleteElement(elementId: string, lang: string) {
-  removeElement(elementId)
+  await removeElement(elementId)
   revalidatePath(`/${lang}`)
 }
 
@@ -67,7 +76,7 @@ export async function updateElementStatus(
   lang: string
 ) {
   if (status !== "passed" && status !== "failed") return
-  setElementStatus(elementId, status)
+  await setElementStatus(elementId, status)
   revalidatePath(`/${lang}`)
 }
 
@@ -105,7 +114,7 @@ export async function uploadElementPhoto(formData: FormData) {
     Buffer.from(await file.arrayBuffer())
   )
 
-  addElementPhoto(
+  await addElementPhoto(
     elementId,
     `/uploads/${filename}`,
     kind === "test" ? "test" : "pour"
